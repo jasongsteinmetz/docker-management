@@ -1,0 +1,41 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: always
+    volumes:
+      # CONFIG: Absolute path on 1TB drive
+      - /var/lib/docker_data/uptime-kuma:/app/data
+      # DOCKER SOCKET: Optional, allows Kuma to monitor containers directly (up/down status)
+      # We use the raw socket here because Kuma needs read access to status
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - homepage.group=Management
+      - homepage.name=Uptime Kuma
+      - homepage.icon=uptime-kuma.png
+      - homepage.href=https://status.streametz.com
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      # Needs raw socket to STOP/START containers during update
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=America/New_York
+      # CLEANUP: Removes old image layers after update (Saves disk space!)
+      - WATCHTOWER_CLEANUP=true
+      # SCHEDULE: Run everyday at 4:00 AM
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      # EXCLUDE: Don't auto-update these containers (Critical DBs)
+      # It's safer to update databases manually to check changelogs
+      - WATCHTOWER_NO_RESTART=true
+    # Command to exclude specific containers by name if needed
+    # command: --label-enable # Only update containers with a specific label (Safe Mode)
+    # OR run default (Updates everything not explicitly excluded)
+    
+networks:
+  default:
+    name: proxy
+    external: true
