@@ -34,6 +34,20 @@ services:
     # Command to exclude specific containers by name if needed
     # command: --label-enable # Only update containers with a specific label (Safe Mode)
     # OR run default (Updates everything not explicitly excluded)
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    volumes:
+      # Needs the socket to read the logs of other containers
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - homepage.group=Management
+      - homepage.name=Dozzle
+      - homepage.icon=dozzle.png
+      - homepage.href=https://logs.streametz.com
+      - homepage.description=Log Viewer
     
 networks:
   default:
