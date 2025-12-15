@@ -56,7 +56,7 @@ services:
     network_mode: host        # Binds directly to host network stack (Critical for your goal)
     restart: unless-stopped
     environment:
-      - TS_AUTHKEY = ${TS_AUTHKEY}
+      - TS_AUTHKEY=${TS_AUTHKEY}
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false # Use kernel networking for better performance
       # - TS_ROUTES=192.168.30.0/24  <-- WE INTENTIONALLY OMIT THIS to restrict access
