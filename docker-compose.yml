@@ -48,6 +48,23 @@ services:
       - homepage.icon=dozzle.png
       - homepage.href=https://logs.streametz.com
       - homepage.description=Log Viewer
+      
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: tailscale
+    hostname: freckles # Name that appears in your Tailscale Admin Panel
+    network_mode: host        # Binds directly to host network stack (Critical for your goal)
+    restart: unless-stopped
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false # Use kernel networking for better performance
+      # - TS_ROUTES=192.168.30.0/24  <-- WE INTENTIONALLY OMIT THIS to restrict access
+    volumes:
+      - /var/lib/docker_data/tailscale:/var/lib/tailscale # Persist identity
+      - /dev/net/tun:/dev/net/tun # Required for VPN tunnel
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
     
 networks:
   default:
