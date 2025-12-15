@@ -12,6 +12,7 @@ services:
     labels:
       - homepage.group=Management
       - homepage.name=Uptime Kuma
+      - homepage.description=Monitoring
       - homepage.icon=uptime-kuma.png
       - homepage.href=https://status.streametz.com
 
